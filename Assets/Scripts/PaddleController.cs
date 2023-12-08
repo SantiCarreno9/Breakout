@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class PaddleController : MonoBehaviour
@@ -7,21 +6,20 @@ public class PaddleController : MonoBehaviour
     [SerializeField]
     private Rigidbody2D _rigidbody = default;
     [SerializeField]
+    private SpriteRenderer _spriteRenderer = default;
+    [SerializeField]
     private Transform _rangeBox = default;
     [SerializeField]
     private Transform _ballSpawningPoint = default;
 
-    //[SerializeField]
-    //private 
+    [Space]
     [SerializeField]
-    private PaddleVisualController _spaceshipVisualController = default;
+    private LaserManager _laserManager = default;   
 
     public Transform BallSpawningPoint => _ballSpawningPoint;
 
     [SerializeField]
     private float _speed = 10;
-
-    private float _paddleWidth = 0;
 
     private Vector2 _movementBounds;
 
@@ -31,8 +29,6 @@ public class PaddleController : MonoBehaviour
     private float _initialScale = 0;
     private float _maxSize = 0;
 
-    private bool _enableLaser = false;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +37,6 @@ public class PaddleController : MonoBehaviour
         _defaultPosition = transform.position;
         float xHalfScale = _rangeBox.localScale.x / 2;
         _movementBounds = new Vector2(_rangeBox.position.x - xHalfScale, _rangeBox.position.x + xHalfScale);
-        _paddleWidth = transform.localScale.x / 2;
     }
 
     private void Update()
@@ -60,6 +55,7 @@ public class PaddleController : MonoBehaviour
     private void LateUpdate()
     {
         Vector2 clampedPosition = transform.position;
+        float _paddleWidth = (_spriteRenderer.size.x / 2 * transform.localScale.x);
         clampedPosition.x = Mathf.Clamp(transform.position.x, _movementBounds.x + _paddleWidth, _movementBounds.y - _paddleWidth);
         transform.position = clampedPosition;
     }
@@ -75,11 +71,8 @@ public class PaddleController : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             _input = -1;
 
-        if (_enableLaser)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-                ShootLaser();
-        }
+        if (Input.GetKeyDown(KeyCode.Space))
+            _laserManager.Shoot(_ballSpawningPoint.position);
     }
 
     private void MovePaddle()
@@ -105,17 +98,7 @@ public class PaddleController : MonoBehaviour
         //_spaceshipVisualController.SetNormalState();        
     }
 
-    public void EnableLaser()
-    {
-        _enableLaser = true;
-    }
-
-    public void ShootLaser()
-    {
-
-    }
-
-    public void DisablePowerUps()
+    public void SetNormalSize()
     {
         transform.localScale = new Vector2(_initialScale, transform.localScale.y);
     }

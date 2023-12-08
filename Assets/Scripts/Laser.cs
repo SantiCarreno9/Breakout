@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Laser : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private float _speed = 7;
+    private LaserManager _laserManager = default;
+
+    public void SetManager(LaserManager laserManager) => _laserManager = laserManager;
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+        if (collision.TryGetComponent(out Block block))
+            block.Hit(true);
+        _laserManager.EnqueueLaser(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        transform.position += Vector3.up * _speed * Time.deltaTime;
     }
 }

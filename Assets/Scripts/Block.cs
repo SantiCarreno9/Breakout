@@ -14,6 +14,11 @@ public class Block : MonoBehaviour
     private int _hitCount = 0;
     private int _maxHitCount = 0;
 
+    public Vector2 GetSize()
+    {
+        return _spriteRenderer.size;
+    }
+
     private void Start()
     {
         OnInstantiated?.Invoke(this);
@@ -21,7 +26,13 @@ public class Block : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        _hitCount++;
+        Hit();
+    }
+
+    public void Hit(bool oneShot = false)
+    {
+        if (!oneShot) _hitCount++;
+        else _hitCount = _maxHitCount;
         UpdateBlockState();
     }
 
@@ -53,6 +64,7 @@ public class Block : MonoBehaviour
 
     public void Reset()
     {
+        _hitCount = 0;
         _spriteRenderer.sprite = _states[0];
     }
 

@@ -1,10 +1,12 @@
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
 public enum GameScreen
 {
-    None,
     MainMenu,
+    LoadLevel,
     InGame,
     Pause,
     Win,
@@ -16,6 +18,8 @@ public class GameUIManager : MonoBehaviour
     [Header("Menu")]
     [SerializeField]
     private GameObject _mainMenuScreen = default;
+    [SerializeField]
+    private GameObject _loadLevelScreen = default;
     [Space]
     [SerializeField]
     private GameObject _inGameScreen = default;
@@ -24,9 +28,9 @@ public class GameUIManager : MonoBehaviour
 
     [Header("End Screen")]
     [SerializeField]
-    private GameObject _endScreen = default;
+    private GameObject _winScreen = default;
     [SerializeField]
-    private TMP_Text _endScreenText = default;
+    private GameObject _gameOverScreen = default;
 
     [Space]
     [Header("In Game Components")]
@@ -34,6 +38,10 @@ public class GameUIManager : MonoBehaviour
     private TMP_Text _scoreText = default;
     [SerializeField]
     private TMP_Text _livesText = default;
+    [SerializeField]
+    private GameObject _laserUI = default;
+    [SerializeField]
+    private TMP_Text _laserCountText = default;
 
     [Space]
     [SerializeField]
@@ -43,7 +51,7 @@ public class GameUIManager : MonoBehaviour
 
     private void Start()
     {
-        //UpdateAmountOfPlayers(_playersDropdown.value);
+        ShowScreen(GameScreen.MainMenu);
     }
 
     void Update()
@@ -60,11 +68,13 @@ public class GameUIManager : MonoBehaviour
     private void ShowScreen(GameScreen screen)
     {
         _mainMenuScreen.SetActive(screen == GameScreen.MainMenu);
+        _loadLevelScreen.SetActive(screen == GameScreen.LoadLevel);
 
         _inGameScreen.SetActive(screen == GameScreen.InGame);
 
         _pauseScreen.SetActive(screen == GameScreen.Pause);
-        _endScreen.SetActive(screen == GameScreen.Win);
+        _winScreen.SetActive(screen == GameScreen.Win);
+        _gameOverScreen.SetActive(screen == GameScreen.GameOver);
     }
 
     public void ShowWinScreen()
@@ -72,40 +82,33 @@ public class GameUIManager : MonoBehaviour
         _soundEffects.PlayWinSound();
         ShowScreen(GameScreen.Win);
         ResetScore();
-        _endScreenText.text = "Congratulations! You've finished the game!";
-        Invoke("GoToMainMenu", 3);
-        GoToMainMenu();
+        StartCoroutine(GoToMainMenuCoroutine());
     }
 
     public void ShowGameOverScreen()
     {
-        _soundEffects.PlayLoseSound();
+        _soundEffects.PlayGameOverSound();
         ShowScreen(GameScreen.GameOver);
         ResetScore();
-        Invoke("GoToMainMenu", 3);
+        StartCoroutine(GoToMainMenuCoroutine());
+    }
+
+    private IEnumerator GoToMainMenuCoroutine()
+    {
+        yield return new WaitForSecondsRealtime(3);
+        GoToMainMenu();
     }
 
     #endregion
 
     #region MENU
 
-    //public void UpdateAmountOfPlayers(int amountOfPlayers)
-    //{
-    //    amountOfPlayers += 2;
-    //    for (int i = 0; i < _playerSelectionItems.Length; i++)
-    //        _playerSelectionItems[i].SetActive(i < amountOfPlayers);
-
-    //    for (int i = 0; i < _scoreTexts.Length; i++)
-    //        _scoreTexts[i].gameObject.SetActive(i < amountOfPlayers);
-
-    //    //GameManager.Instance.UpdateAmountOfPlayers(amountOfPlayers);
-    //}
-
-    public void StartGame()
+    private void StartGame()
     {
-        ResumeGame();
         ResetScore();
+        ShowScreen(GameScreen.InGame);
         GameManager.Instance.StartGame();
+        _isGamePaused = false;
     }
 
     public void ResumeGame()
@@ -113,6 +116,21 @@ public class GameUIManager : MonoBehaviour
         ShowScreen(GameScreen.InGame);
         GameManager.Instance.ResumeGame();
         _isGamePaused = false;
+    }
+
+    public IEnumerator LoadNextLevel(int index)
+    {
+        GameManager.Instance.PauseGame();
+        yield return new WaitForSecondsRealtime(2);
+        GameManager.Instance.LoadLevel(index);
+        GameManager.Instance.ResumeGame();
+        GameManager.Instance.StartNewLevel();
+    }
+
+    public void LoadLevel(int index)
+    {
+        GameManager.Instance.LoadLevel(index);
+        StartGame();
     }
 
     public void PauseGame()
@@ -127,29 +145,28 @@ public class GameUIManager : MonoBehaviour
         ShowScreen(GameScreen.MainMenu);
     }
 
-    public void ReshootBall()
-    {
-        ResumeGame();
-        GameManager.Instance.ReshootBall();
-    }
-
-    public void RestartGame()
-    {
-        ShowScreen(GameScreen.InGame);
-        ResetScore();
-        GameManager.Instance.StartGame();
-    }
-
     public void ExitGame()
     {
         Application.Quit();
     }
-    #endregion
+    #endregion    
 
     public void UpdateLives(int lives)
     {
-        _livesText.text = lives.ToString();
-        _soundEffects.PlayScoreSound();
+        _livesText.text = lives.ToString();        
+    }
+
+    public void LoseLife()
+    {
+        _soundEffects.PlayLoseSound();
+    }
+
+    public void EnableLaserUI() => _laserUI.SetActive(true);
+    public void DisableLaserUI() => _laserUI.SetActive(false);
+
+    public void UpdateLaserCount(int laserCount)
+    {
+        _laserCountText.text = "x" + laserCount;
     }
 
     #region SCORE

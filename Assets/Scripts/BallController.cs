@@ -43,7 +43,7 @@ public class BallController : MonoBehaviour
     {
         Vector2 deroute = (Vector2.Perpendicular(currentDirection) * UnityEngine.Random.Range(-1.0f, 1.0f));
         _rigidbody.AddForce((currentDirection + deroute) * _speed, ForceMode2D.Impulse);
-    }    
+    }
 
     public void Shoot()
     {
@@ -89,10 +89,7 @@ public class BallController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == 6)
-        {
-            Debug.Log(collision.name);
             GameManager.Instance.LoseLife();
-        }        
     }
 
 }
