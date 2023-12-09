@@ -29,12 +29,16 @@ public class Level : MonoBehaviour
     {
         _destroyedRowsCount++;
         if (_destroyedRowsCount == _rows.Length)
+        {
+            _destroyedRowsCount = 0;
             GameManager.Instance.FinishLevel();
+        }        
     }
 
     public void Reset()
     {
         for (int i = 0; i < _rows.Length; i++)
             _rows[i].Reset();
+        _destroyedRowsCount = 0;
     }
 }

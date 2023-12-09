@@ -2899,6 +2899,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Obstacle (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8050902368577180443, guid: 7fde52e0d5239b6498d98248cc39667c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3411,9 +3415,9 @@ RectTransform:
   - {fileID: 509355002}
   - {fileID: 1985884178}
   - {fileID: 1029656974}
+  - {fileID: 587812091}
   - {fileID: 152324693}
   - {fileID: 442680497}
-  - {fileID: 587812091}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7297,6 +7301,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Obstacle
       objectReference: {fileID: 0}
+    - target: {fileID: 8050902368577180443, guid: 7fde52e0d5239b6498d98248cc39667c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7821,6 +7829,7 @@ MonoBehaviour:
   _winSound: {fileID: 8300000, guid: 7e7856811f0e8d64a83ab85ebaf88781, type: 3}
   _loseSound: {fileID: 8300000, guid: fc7e1131945e7c245a54e9f0a402784c, type: 3}
   _gameOverSound: {fileID: 8300000, guid: e456c7efa4bb53443b9d307e9b117efb, type: 3}
+  _musicToggle: {fileID: 2114801636}
 --- !u!114 &1480229304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7835,11 +7844,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioSources:
   - {fileID: 1480229302}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 1991100399}
+  - {fileID: 8046240585481021236}
   _onIcon: {fileID: 236421686}
   _offIcon: {fileID: 1950524720}
 --- !u!114 &1480229305

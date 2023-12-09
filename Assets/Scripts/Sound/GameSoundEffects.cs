@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameSoundEffects : MonoBehaviour
 {
@@ -20,6 +22,9 @@ public class GameSoundEffects : MonoBehaviour
     [SerializeField]
     private AudioClip _gameOverSound = default;
 
+    [SerializeField]
+    private Toggle _musicToggle = default;
+
     public void PlayButtonSound()
     {
         _audioSource.clip = _buttonSound;
@@ -36,6 +41,7 @@ public class GameSoundEffects : MonoBehaviour
     {
         _audioSource.clip = _winSound;
         _audioSource.Play();
+        StartCoroutine(MuteMusicWhilePlaying());
     }
 
     public void PlayLoseSound()
@@ -48,5 +54,14 @@ public class GameSoundEffects : MonoBehaviour
     {
         _audioSource.clip = _gameOverSound;
         _audioSource.Play();
+        StartCoroutine(MuteMusicWhilePlaying());
+    }
+
+    private IEnumerator MuteMusicWhilePlaying()
+    {
+        bool originalState = _musicToggle.isOn;
+        _musicToggle.isOn = false;
+        yield return new WaitWhile(() => _audioSource.isPlaying);
+        _musicToggle.isOn = originalState;
     }
 }

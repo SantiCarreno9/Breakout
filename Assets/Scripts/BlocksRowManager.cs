@@ -38,7 +38,12 @@ public class BlocksRowManager : MonoBehaviour
         {
             GameManager.Instance.PowerUpsManager.TryToSpawnPowerUp(block.transform.position);
         }
-        else OnRowDestroyed?.Invoke();
+        else
+        {
+            _destroyedBlocksCount = 0;
+            OnRowDestroyed?.Invoke();
+        }
+            
     }
 
     public void Reset()
@@ -48,6 +53,7 @@ public class BlocksRowManager : MonoBehaviour
             _blocks[i].gameObject.SetActive(true);
             _blocks[i].Reset();
         }
+        _destroyedBlocksCount = 0;
     }
 
     private int GetRandomMaxHitCount()
@@ -57,19 +63,19 @@ public class BlocksRowManager : MonoBehaviour
         switch (_difficulty)
         {
             case 1:
-                probabilities[0] = 70;
+                probabilities[0] = 80;
                 probabilities[1] = 90;
                 probabilities[2] = 95;
                 probabilities[3] = 100;
                 break;
             case 2:
-                probabilities[0] = 50;
+                probabilities[0] = 60;
                 probabilities[1] = 80;
                 probabilities[2] = 90;
                 probabilities[3] = 100;
                 break;
             case 3:
-                probabilities[0] = 40;
+                probabilities[0] = 50;
                 probabilities[1] = 60;
                 probabilities[2] = 80;
                 probabilities[3] = 100;
