@@ -17,6 +17,8 @@ public class BallController : MonoBehaviour
     private bool _isMoving = false;
     private bool _sendToSpawningPosition = true;
 
+    private Vector2 _derouteDirection = Vector2.zero;
+
     private void Update()
     {
         if (_sendToSpawningPosition)
@@ -28,14 +30,9 @@ public class BallController : MonoBehaviour
             bool isYZero = Math.Round(_rigidbody.velocity.y, 1) == 0;
             if (isXZero || isYZero)
                 _timeStuck += Time.deltaTime;
-            else _timeStuck = 0;
+            else _timeStuck = 0;            
 
-            if (_timeStuck > _maxTimeStuck)
-            {
-                Vector2 direction = (isXZero) ? Vector2.right : Vector2.up;
-                Deroute(direction);
-                _timeStuck = 0;
-            }
+            _derouteDirection=isXZero?Vector2.right:Vector2.up;
         }
     }
 
@@ -90,6 +87,15 @@ public class BallController : MonoBehaviour
     {
         if (collision.gameObject.layer == 6)
             GameManager.Instance.LoseLife();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (_timeStuck > _maxTimeStuck)
+        {            
+            Deroute(_derouteDirection);
+            _timeStuck = 0;
+        }
     }
 
 }
