@@ -94,8 +94,7 @@ public class PaddleController : MonoBehaviour
         if (transform.localScale.x >= _maxSize)
             return;
 
-        transform.localScale = new Vector2(transform.localScale.x * 2, transform.localScale.y);
-        //_spaceshipVisualController.SetNormalState();        
+        transform.localScale = new Vector2(transform.localScale.x * 2, transform.localScale.y);             
     }
 
     public void SetNormalSize()
